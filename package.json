@@ -1,0 +1,86 @@
+{
+  "name": "fieldvision",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --passWithNoTests",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx --max-warnings 0",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix"
+  },
+  "dependencies": {
+    "@react-navigation/native": "^7.2.2",
+    "@react-navigation/native-stack": "^7.3.2",
+    "@supabase/supabase-js": "^2.101.1",
+    "@tanstack/react-query": "^5.96.2",
+    "axios": "^1.7.9",
+    "react": "19.2.3",
+    "react-native": "0.84.1",
+    "react-native-permissions": "^5.5.1",
+    "react-native-safe-area-context": "^5.8.0",
+    "react-native-screens": "^4.4.0",
+    "react-native-url-polyfill": "^3.0.0",
+    "zod": "^3.24.1",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@babel/preset-env": "^7.25.0",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "20.1.0",
+    "@react-native-community/cli-platform-android": "20.1.0",
+    "@react-native-community/cli-platform-ios": "20.1.0",
+    "@react-native/babel-preset": "^0.84.0",
+    "@react-native/eslint-config": "^0.84.0",
+    "@react-native/metro-config": "^0.84.0",
+    "@react-native/typescript-config": "^0.84.0",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.9.0",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^19.2.0",
+    "babel-jest": "^29.7.0",
+    "babel-plugin-module-resolver": "^5.0.3",
+    "eslint": "^8.57.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "react-native-dotenv": "^3.4.11",
+    "react-test-renderer": "19.2.3",
+    "typescript": "^6.0.2"
+  },
+  "engines": {
+    "node": ">= 22.11.0"
+  },
+  "codegenConfig": {
+    "name": "FieldVisionSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "com.fieldvision"
+    }
+  },
+  "jest": {
+    "preset": "react-native",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "__tests__/setup.ts"
+    ],
+    "setupFilesAfterEnv": [
+      "./__tests__/setup.ts"
+    ],
+    "moduleNameMapper": {
+      "^@modules/(.*)$": "<rootDir>/src/modules/$1",
+      "^@shared/(.*)$": "<rootDir>/src/shared/$1",
+      "^@navigation/(.*)$": "<rootDir>/src/navigation/$1",
+      "^@specs/(.*)$": "<rootDir>/src/specs/$1",
+      "^@env$": "<rootDir>/__mocks__/env.ts"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-native|@react-native|@react-navigation|react-native-screens|react-native-safe-area-context|react-native-permissions)/)"
+    ]
+  }
+}

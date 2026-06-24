@@ -1,0 +1,13 @@
+export const CLAUDE_API_KEY = 'sk-ant-PLACEHOLDER-test';
+export const OPENAI_API_KEY = 'sk-openai-PLACEHOLDER-test';
+export const VISION_PROVIDER = 'claude';
+export const TTS_PROVIDER = 'system';
+export const META_APP_TOKEN = 'meta-PLACEHOLDER-test';
+export const SUPABASE_URL = 'https://placeholder.supabase.co';
+export const SUPABASE_ANON_KEY = 'eyJPLACEHOLDER';
+export const STRIPE_PUBLISHABLE_KEY = 'pk_test_PLACEHOLDER';
+export const STRIPE_PRICE_STARTER = 'price_PLACEHOLDER_starter';
+export const STRIPE_PRICE_PRO = 'price_PLACEHOLDER_pro';
+export const STRIPE_PRICE_ENTERPRISE = 'price_PLACEHOLDER_enterprise';
+export const CAPTURE_INTERVAL_MS = '0';
+export const APP_ENV = 'test';
