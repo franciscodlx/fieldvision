@@ -9,15 +9,23 @@ export function isMetaSdkConfigured(): boolean {
   return token.length > 0 && !token.includes('PLACEHOLDER');
 }
 
+// Pon esto en true para forzar el repo 100% JS (sin TurboModule nativo),
+// útil si el nativo no está disponible en algún entorno.
+const FORCE_JS_MOCK = false;
+
 /**
- * Devuelve el repo nativo (TurboModule MetaGlasses) si el SDK de Meta está
- * configurado; de lo contrario el mock en JS (modo desarrollo).
+ * Repositorio de lentes.
  *
- * Nota: el TurboModule nativo iOS aún crashea bajo Nueva Arquitectura
- * (ver MockGlassesRepository) — arreglar al integrar el SDK real de Meta.
+ * El TurboModule nativo (`MetaGlassesRepository`) YA funciona en iOS y Android
+ * con cuerpos mock (sesión/foto simuladas) + TTS real por el altavoz.
+ * Al integrar el SDK de Meta DAT solo se reemplazan los `// TODO: Replace mock`
+ * en los archivos nativos (.mm / .kt); esta capa JS no cambia.
+ *
+ * `MockGlassesRepository` (100% JS, sin voz) queda como fallback.
  */
 export function createGlassesRepository(): IGlassesRepository {
-  return isMetaSdkConfigured()
-    ? new MetaGlassesRepository()
-    : new MockGlassesRepository();
+  if (FORCE_JS_MOCK) {
+    return new MockGlassesRepository();
+  }
+  return new MetaGlassesRepository();
 }
