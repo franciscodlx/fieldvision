@@ -1,0 +1,5 @@
+.DS_Store
+
+# Transcripts crudos de Claude Code: se conservan en disco, no se suben
+# (pueden contener valores de .env, tokens o credenciales leídos en sesión).
+.claude-sessions/transcripts/*.jsonl
