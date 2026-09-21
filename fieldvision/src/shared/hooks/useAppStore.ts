@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type {
-  GlassesConnectionStatus, GlassesSession,
+  GlassesConnectionStatus, GlassesSession, CameraFrame,
   VisionAnalysis, FieldVisionConfig,
   AuthUser, AuthSession,
 } from '../types';
@@ -21,8 +21,11 @@ interface AuthSlice {
 interface GlassesSlice {
   connectionStatus: GlassesConnectionStatus;
   session: GlassesSession | null;
+  /** Última foto capturada por los lentes, para poder verla en pantalla. */
+  lastFrame: CameraFrame | null;
   setConnectionStatus: (s: GlassesConnectionStatus) => void;
   setSession: (s: GlassesSession | null) => void;
+  setLastFrame: (f: CameraFrame | null) => void;
 }
 
 interface VisionSlice {
@@ -63,13 +66,16 @@ export const useAppStore = create<AppStore>((set) => ({
     currentAnalysis: null,
     session: null,
     connectionStatus: 'disconnected',
+    lastFrame: null,
   }),
 
   // Glasses
   connectionStatus: 'disconnected',
   session: null,
+  lastFrame: null,
   setConnectionStatus: (connectionStatus) => set({ connectionStatus }),
   setSession: (session) => set({ session }),
+  setLastFrame: (lastFrame) => set({ lastFrame }),
 
   // Vision
   analyses: [],

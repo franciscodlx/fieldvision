@@ -3,7 +3,7 @@ import type { CameraFrame, FieldContext, VisionAnalysis, AnalysisSeverity } from
 import { AppConfig, SYSTEM_PROMPTS } from '@shared/config';
 
 // La IA de visión está configurada solo si hay una key real (no placeholder).
-function isVisionConfigured(): boolean {
+export function isVisionConfigured(): boolean {
   const key = AppConfig.VISION_PROVIDER === 'openai'
     ? AppConfig.OPENAI_API_KEY
     : AppConfig.CLAUDE_API_KEY;

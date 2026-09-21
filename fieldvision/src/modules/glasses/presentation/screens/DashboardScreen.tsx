@@ -1,12 +1,13 @@
 import React from 'react';
 import {
   View, Text, TouchableOpacity, ScrollView,
-  ActivityIndicator, StyleSheet, SafeAreaView,
+  ActivityIndicator, StyleSheet, SafeAreaView, Image,
 } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { AppStackParamList } from '@navigation/AppNavigator';
 import { useFieldVision } from '../hooks/useFieldVision';
 import { useAppStore } from '@shared/hooks/useAppStore';
+import { isVisionConfigured } from '@modules/vision/infrastructure/services/VisionAIService';
 import type { FieldContext, VisionAnalysis, AnalysisSeverity } from '@shared/types';
 
 type Props = {
@@ -46,9 +47,10 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
     connectionStatus, isConnected, isAnalyzing,
     currentAnalysis, analyses, connect, disconnect, captureAndAnalyze,
   } = useFieldVision();
-  const { config, setConfig } = useAppStore();
+  const { config, setConfig, lastFrame } = useAppStore();
 
   const historyItems = analyses.filter(a => a.id !== currentAnalysis?.id);
+  const visionConfigured = isVisionConfigured();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -121,6 +123,30 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
           </View>
         )}
 
+        {/* Última foto capturada por los lentes */}
+        {lastFrame && (
+          <View style={styles.previewCard}>
+            <Text style={styles.previewLabel}>
+              Última captura de los lentes · {lastFrame.width}×{lastFrame.height}
+            </Text>
+            <Image
+              source={{ uri: `data:image/jpeg;base64,${lastFrame.base64}` }}
+              style={styles.previewImage}
+              resizeMode="cover"
+            />
+          </View>
+        )}
+
+        {/* Aviso: sin key de IA el diagnóstico es simulado */}
+        {!visionConfigured && (
+          <View style={styles.demoBanner}>
+            <Text style={styles.demoBannerText}>
+              IA en modo demo: el diagnóstico es un texto de ejemplo, no analiza la foto.
+              Pon un CLAUDE_API_KEY real en .env para activar el análisis.
+            </Text>
+          </View>
+        )}
+
         {/* Current Analysis Card */}
         {currentAnalysis && (
           <View style={[styles.card, { borderColor: SEVERITY_COLORS[currentAnalysis.severity] }]}>
@@ -152,6 +178,34 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  previewCard: {
+    backgroundColor: '#111827',
+    borderRadius: 12,
+    padding: 8,
+    marginBottom: 12,
+  },
+  previewLabel: {
+    color: '#9ca3af',
+    fontSize: 12,
+    marginBottom: 6,
+  },
+  previewImage: {
+    width: '100%',
+    height: 220,
+    borderRadius: 8,
+    backgroundColor: '#1f2937',
+  },
+  demoBanner: {
+    backgroundColor: '#78350f',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 12,
+  },
+  demoBannerText: {
+    color: '#fde68a',
+    fontSize: 12,
+    lineHeight: 17,
+  },
   flex: { flex: 1 },
   btnSpacer: { marginLeft: 8 },
   container: { flex: 1, backgroundColor: '#f9fafb' },

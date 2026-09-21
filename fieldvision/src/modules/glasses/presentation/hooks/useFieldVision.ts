@@ -23,6 +23,7 @@ export function useFieldVision() {
     setSession,
     setIsAnalyzing,
     addAnalysis,
+    setLastFrame,
   } = useAppStore();
 
   const autoCaptureRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -40,6 +41,7 @@ export function useFieldVision() {
     setIsAnalyzing(true);
     try {
       const frame = await glassesRepo.capturePhoto();
+      setLastFrame(frame);
       const { analysis } = await analyzeUseCase.execute({
         frame,
         context: config.context,
@@ -51,7 +53,7 @@ export function useFieldVision() {
     } finally {
       setIsAnalyzing(false);
     }
-  }, [isAnalyzing, isConnected, config.context, setIsAnalyzing, addAnalysis]);
+  }, [isAnalyzing, isConnected, config.context, setIsAnalyzing, addAnalysis, setLastFrame]);
 
   const connect = useCallback(async () => {
     setConnectionStatus('connecting');
