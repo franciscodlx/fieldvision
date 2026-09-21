@@ -30,5 +30,22 @@ target 'FieldVision' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # Xcode 27 rechaza cualquier target con IPHONEOS_DEPLOYMENT_TARGET < 15.0.
+    # Algunos pods (p. ej. el bundle RNPermissions-RNPermissionsPrivacyInfo) declaran 12.4
+    # en su podspec, lo que rompe el build. Forzamos el mismo minimo que la app.
+    deployment_target = '17.2'
+    installer.pods_project.targets.each do |t|
+      t.build_configurations.each do |c|
+        c.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = deployment_target
+      end
+    end
+    installer.generated_projects.each do |project|
+      project.targets.each do |t|
+        t.build_configurations.each do |c|
+          c.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = deployment_target
+        end
+      end
+    end
   end
 end

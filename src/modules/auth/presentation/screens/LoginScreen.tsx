@@ -23,8 +23,8 @@ const ERROR_MESSAGES: Record<AuthError, string> = {
 
 export function LoginScreen({ navigation }: Props): React.JSX.Element {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('tecnico@fieldvision.app');
+  const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

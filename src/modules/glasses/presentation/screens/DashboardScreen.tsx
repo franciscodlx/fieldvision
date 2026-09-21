@@ -105,7 +105,7 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
           <View style={styles.row}>
             <TouchableOpacity
               onPress={captureAndAnalyze}
-              style={[styles.btn, styles.btnGreen, { flex: 1 }]}
+              style={[styles.btn, styles.btnGreen, styles.flex]}
               disabled={isAnalyzing}
             >
               {isAnalyzing
@@ -114,7 +114,7 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={disconnect}
-              style={[styles.btn, styles.btnGray, { marginLeft: 8 }]}
+              style={[styles.btn, styles.btnGray, styles.btnSpacer]}
             >
               <Text style={styles.btnText}>Desconectar</Text>
             </TouchableOpacity>
@@ -152,6 +152,8 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  btnSpacer: { marginLeft: 8 },
   container: { flex: 1, backgroundColor: '#f9fafb' },
   scroll: { padding: 16 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },

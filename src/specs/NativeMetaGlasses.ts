@@ -16,7 +16,25 @@ export interface FrameData {
   timestamp: number;
 }
 
+export interface IntegrationStatus {
+  configured: boolean;
+  /** 0 unavailable · 1 available · 2 registering · 3 registered */
+  registrationState: number;
+  deviceCount: number;
+  /** 'granted' | 'denied' | 'unknown' */
+  cameraPermission: string;
+  sessionActive: boolean;
+  /** Texto legible con el estado de cada par de lentes que ve Meta AI. */
+  deviceDetail: string;
+}
+
 export interface Spec extends TurboModule {
+  /** Qué falta para poder capturar: registro, permiso, lentes a la vista. */
+  getIntegrationStatus(): Promise<IntegrationStatus>;
+  /** Abre la app de Meta AI para que el usuario autorice FieldVision. */
+  registerWithMetaAI(): Promise<void>;
+  /** Pide el permiso de cámara de los lentes. Devuelve 'granted' | 'denied'. */
+  requestCameraPermission(): Promise<string>;
   startSession(): Promise<SessionData>;
   endSession(sessionId: string): Promise<void>;
   capturePhoto(): Promise<FrameData>;

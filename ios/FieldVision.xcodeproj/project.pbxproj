@@ -14,6 +14,9 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		80D9451BA4AAF625BC1981C6 /* MetaGlassesModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 20D6A02E4645B0E62ECCEF56 /* MetaGlassesModule.mm */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		FA1000000000000000000001 /* MWDATCore in Frameworks */ = {isa = PBXBuildFile; productRef = FA2000000000000000000001 /* MWDATCore */; };
+		FA1000000000000000000002 /* MWDATCamera in Frameworks */ = {isa = PBXBuildFile; productRef = FA2000000000000000000002 /* MWDATCamera */; };
+		FA4000000000000000000001 /* MetaGlassesSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5000000000000000000001 /* MetaGlassesSDK.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +33,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FieldVision/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D70225021A9E9BF46C8DE329 /* MetaGlassesModule.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = MetaGlassesModule.h; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FA5000000000000000000001 /* MetaGlassesSDK.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetaGlassesSDK.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +43,8 @@
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-FieldVision.a in Frameworks */,
 				2871B694F35607B799051EAC /* AVFoundation.framework in Frameworks */,
+				FA1000000000000000000001 /* MWDATCore in Frameworks */,
+				FA1000000000000000000002 /* MWDATCamera in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +69,7 @@
 			children = (
 				D70225021A9E9BF46C8DE329 /* MetaGlassesModule.h */,
 				20D6A02E4645B0E62ECCEF56 /* MetaGlassesModule.mm */,
+				FA5000000000000000000001 /* MetaGlassesSDK.swift */,
 			);
 			name = NativeMetaGlasses;
 			path = FieldVision/NativeMetaGlasses;
@@ -144,6 +151,10 @@
 			dependencies = (
 			);
 			name = FieldVision;
+			packageProductDependencies = (
+				FA2000000000000000000001 /* MWDATCore */,
+				FA2000000000000000000002 /* MWDATCamera */,
+			);
 			productName = FieldVision;
 			productReference = 13B07F961A680F5B00A75B9A /* FieldVision.app */;
 			productType = "com.apple.product-type.application";
@@ -170,6 +181,9 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				FA3000000000000000000001 /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -274,6 +288,7 @@
 			files = (
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
 				80D9451BA4AAF625BC1981C6 /* MetaGlassesModule.mm in Sources */,
+				FA4000000000000000000001 /* MetaGlassesSDK.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,7 +304,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FieldVision/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -318,7 +333,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = FieldVision/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -389,7 +404,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -466,7 +481,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -520,6 +535,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FA3000000000000000000001 /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/meta-wearables-dat-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 0.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FA2000000000000000000001 /* MWDATCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FA3000000000000000000001 /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */;
+			productName = MWDATCore;
+		};
+		FA2000000000000000000002 /* MWDATCamera */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FA3000000000000000000001 /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */;
+			productName = MWDATCamera;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

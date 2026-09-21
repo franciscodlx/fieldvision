@@ -31,6 +31,28 @@
 
 ---
 
+## 🆕 Xcode 27 / iOS 27 (2026-09-20)
+
+Tras actualizar a **Xcode 27** y con el iPhone 17 Pro en **iOS 27.0**, el build de junio dejó de servir.
+Dos bloqueos reales, ya arreglados:
+
+1. **Pods con deployment target 12.4** — Xcode 27 solo acepta 15.0+. El bundle
+   `RNPermissions-RNPermissionsPrivacyInfo` rompía el build. Se añadió un `post_install`
+   en `ios/Podfile` que fuerza `IPHONEOS_DEPLOYMENT_TARGET = 15.1` en todos los pod targets.
+2. **iOS 27 exige el ciclo de vida UIScene** — la app compilaba e instalaba, pero moría
+   al arrancar con `EXC_BREAKPOINT` en
+   `__UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption`. Se adoptó UIScene:
+   `SceneDelegate` en `ios/FieldVision/AppDelegate.swift` (crea la `UIWindow` y arranca
+   React Native) + `UIApplicationSceneManifest` en `Info.plist`.
+
+> Si `pod install` falla con `Could not find gem 'cocoapods'`, es que el Gemfile/bundler quedó
+> desfasado tras actualizar Ruby: usa `RCT_NEW_ARCH_ENABLED=1 pod install` (CocoaPods de Homebrew).
+
+Verificado el 2026-09-20 en el iPhone 17 Pro físico: compila, instala, arranca y carga el
+bundle desde Metro. `npm run lint` · `npm run type-check` · `npm test` (55/55) en verde.
+
+---
+
 ## 👤 Usuario de prueba (modo desarrollo, sin backend)
 
 La auth no tenía mock (siempre pegaba a Supabase real, con URL placeholder → fallaba).

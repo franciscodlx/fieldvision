@@ -38,6 +38,31 @@ class MetaGlassesModule(reactContext: ReactApplicationContext) :
         super.invalidate()
     }
 
+    // El SDK real de Meta (meta-wearables-dat-android) todavía no está integrado en Android;
+    // iOS ya usa el DAT real. Estos métodos existen para cumplir el contrato de la spec.
+    @ReactMethod
+    fun getIntegrationStatus(promise: Promise) {
+        val map = WritableNativeMap().apply {
+            putBoolean("configured", false)
+            putInt("registrationState", 0)
+            putInt("deviceCount", 0)
+            putString("cameraPermission", "unknown")
+            putBoolean("sessionActive", false)
+            putString("deviceDetail", "El SDK de Meta Wearables aún no está integrado en Android.")
+        }
+        promise.resolve(map)
+    }
+
+    @ReactMethod
+    fun registerWithMetaAI(promise: Promise) {
+        promise.reject("not_implemented", "El SDK de Meta Wearables aún no está integrado en Android.")
+    }
+
+    @ReactMethod
+    fun requestCameraPermission(promise: Promise) {
+        promise.reject("not_implemented", "El SDK de Meta Wearables aún no está integrado en Android.")
+    }
+
     @ReactMethod
     fun startSession(promise: Promise) {
         // TODO: Replace mock

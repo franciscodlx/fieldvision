@@ -6,7 +6,7 @@ import {
 import { BILLING_PLANS } from '@shared/config';
 
 export function PlansScreen(): React.JSX.Element {
-  const handleSelect = (planName: string) => {
+  const handleSelect = (_planName: string) => {
     Alert.alert(
       'Próximamente',
       `Configura Stripe para activar pagos. Ver docs/06-payments.md`,

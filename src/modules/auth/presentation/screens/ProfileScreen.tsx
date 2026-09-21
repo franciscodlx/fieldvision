@@ -3,6 +3,7 @@ import {
   View, Text, TouchableOpacity, StyleSheet,
   SafeAreaView, ScrollView, Alert,
 } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 import { BILLING_PLANS } from '@shared/config';
 
@@ -41,6 +42,12 @@ export function ProfileScreen(): React.JSX.Element {
     ? 0
     : Math.min(100, (authUser.analysesThisMonth / authUser.maxAnalysesPerMonth) * 100);
 
+  // El ancho y el color dependen del consumo, así que no pueden vivir en el StyleSheet.
+  const progressFillStyle: ViewStyle = {
+    width: `${usagePercent}%`,
+    backgroundColor: usagePercent >= 90 ? '#dc2626' : usagePercent >= 70 ? '#d97706' : '#16a34a',
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -76,10 +83,7 @@ export function ProfileScreen(): React.JSX.Element {
           </View>
           {authUser.maxAnalysesPerMonth !== -1 && (
             <View style={styles.progressBar}>
-              <View style={[styles.progressFill, {
-                width: `${usagePercent}%`,
-                backgroundColor: usagePercent >= 90 ? '#dc2626' : usagePercent >= 70 ? '#d97706' : '#16a34a',
-              }]} />
+              <View style={[styles.progressFill, progressFillStyle]} />
             </View>
           )}
           {authUser.maxAnalysesPerMonth !== -1 && (

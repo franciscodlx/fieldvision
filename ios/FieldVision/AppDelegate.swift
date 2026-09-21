@@ -5,8 +5,6 @@ import ReactAppDependencyProvider
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
-
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -21,15 +19,63 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
-    window = UIWindow(frame: UIScreen.main.bounds)
+    // El SDK de Meta Wearables debe configurarse una sola vez al arrancar.
+    if let error = MetaGlassesSDK.shared.configureIfNeeded() {
+      NSLog("[FieldVision] MWDAT no se configuró: %@", error.localizedDescription)
+    }
+
+    // La ventana la crea SceneDelegate: iOS 27 exige el ciclo de vida UIScene
+    // y mata en el arranque a cualquier app que siga usando solo UIWindow aquí.
+    return true
+  }
+
+  func application(
+    _ application: UIApplication,
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    let configuration = UISceneConfiguration(
+      name: "Default Configuration",
+      sessionRole: connectingSceneSession.role
+    )
+    configuration.delegateClass = SceneDelegate.self
+    return configuration
+  }
+}
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+
+  func scene(
+    _ scene: UIScene,
+    willConnectTo session: UISceneSession,
+    options connectionOptions: UIScene.ConnectionOptions
+  ) {
+    guard let windowScene = scene as? UIWindowScene else { return }
+    guard let factory = (UIApplication.shared.delegate as? AppDelegate)?.reactNativeFactory else { return }
+
+    let window = UIWindow(windowScene: windowScene)
+    self.window = window
 
     factory.startReactNative(
       withModuleName: "FieldVision",
       in: window,
-      launchOptions: launchOptions
+      launchOptions: nil
     )
 
-    return true
+    // Meta AI puede devolvernos el control aquí si la app estaba cerrada.
+    handleWearablesURLs(connectionOptions.urlContexts)
+  }
+
+  func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    handleWearablesURLs(URLContexts)
+  }
+
+  /// Callback de registro de la app de Meta AI (esquema `fieldvision://`).
+  private func handleWearablesURLs(_ contexts: Set<UIOpenURLContext>) {
+    for context in contexts {
+      MetaGlassesSDK.shared.handleURL(context.url) { _ in }
+    }
   }
 }
 

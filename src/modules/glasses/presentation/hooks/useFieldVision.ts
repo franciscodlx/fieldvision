@@ -46,7 +46,7 @@ export function useFieldVision() {
         speakResult: true,
       });
       addAnalysis(analysis);
-    } catch (_err) {
+    } catch {
       await glassesRepo.speakText('Error al analizar. Intenta de nuevo.').catch(() => {});
     } finally {
       setIsAnalyzing(false);
@@ -59,7 +59,8 @@ export function useFieldVision() {
       const newSession = await connectUseCase.execute(config.technicianName);
       setSession(newSession);
       setConnectionStatus('connected');
-    } catch (_err) {
+    } catch (error) {
+      console.log(error)
       setConnectionStatus('error');
     }
   }, [config.technicianName, setConnectionStatus, setSession]);
@@ -83,7 +84,7 @@ export function useFieldVision() {
         speakResult: true,
       });
       addAnalysis(analysis);
-    } catch (_err) {
+    } catch {
       await glassesRepo.speakText('Error al analizar. Intenta de nuevo.').catch(() => {});
     } finally {
       setIsAnalyzing(false);

@@ -22,10 +22,43 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.fieldvision.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fieldvision</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fb-viewapp</string>
+	</array>
+	<key>MWDAT</key>
+	<dict>
+		<!-- Modo desarrollador: con MetaAppID = 0 el registro contra Meta AI siempre se permite
+		     y NO hace falta versión ni release channel. Para producción, cambia a 1456035589291024
+		     (el App ID real del proyecto en el Wearables Developer Center) y publica un release channel. -->
+		<key>MetaAppID</key>
+		<string>0</string>
+		<key>ClientToken</key>
+		<string>AR|1456035589291024|e9d05b7c67b2c8c0bb72d30351630477</string>
+		<key>TeamID</key>
+		<string>$(DEVELOPMENT_TEAM)</string>
+		<!-- Permite que la app de Meta AI regrese a FieldVision al registrar la integración.
+		     Para producción, Meta pide un universal link registrado con Apple. -->
+		<key>AppLinkURLScheme</key>
+		<string>fieldvision://</string>
+	</dict>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 	  <!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
@@ -34,10 +67,47 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>FieldVision usa la cámara de tus lentes Ray-Ban Meta para capturar la imagen que analiza la IA.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>FieldVision usa el micrófono de tus lentes para los comandos de voz manos libres.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>FieldVision usa la red local para recibir el video de tus lentes Ray-Ban Meta por Wi-Fi.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_bonjour._tcp</string>
+	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>FieldVision usa tu ubicación para etiquetar los diagnósticos de campo con el sitio donde se realizaron.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>FieldVision se conecta por Bluetooth a tus lentes Ray-Ban Meta para capturar imágenes y reproducir el diagnóstico por voz.</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>external-accessory</string>
+	</array>
+	<key>UISupportedExternalAccessoryProtocols</key>
+	<array>
+		<string>com.meta.ar.wearable</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
