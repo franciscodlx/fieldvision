@@ -4,7 +4,16 @@ import { VisionAIService } from '@modules/vision/infrastructure/services/VisionA
 import { ConnectGlassesUseCase } from '../../application/use-cases/ConnectGlassesUseCase';
 import { AnalyzeFrameUseCase } from '@modules/vision/application/use-cases/AnalyzeFrameUseCase';
 import { useAppStore } from '@shared/hooks/useAppStore';
+import { describeVisionError } from '@modules/vision/infrastructure/services/MuseVisionClient';
 import type { CameraFrame } from '@shared/types';
+
+/** Duración del clip de video que se graba del stream de los lentes antes de analizarlo. */
+export const CLIP_DURATION_MS = 5000;
+
+async function speakError(error: unknown): Promise<void> {
+  console.warn('[FieldVision] análisis falló:', error);
+  await glassesRepo.speakText(describeVisionError(error)).catch(() => {});
+}
 
 const glassesRepo = createGlassesRepository();
 const visionService = new VisionAIService();
@@ -48,8 +57,8 @@ export function useFieldVision() {
         speakResult: true,
       });
       addAnalysis(analysis);
-    } catch {
-      await glassesRepo.speakText('Error al analizar. Intenta de nuevo.').catch(() => {});
+    } catch (error) {
+      await speakError(error);
     } finally {
       setIsAnalyzing(false);
     }
@@ -86,12 +95,49 @@ export function useFieldVision() {
         speakResult: true,
       });
       addAnalysis(analysis);
-    } catch {
-      await glassesRepo.speakText('Error al analizar. Intenta de nuevo.').catch(() => {});
+    } catch (error) {
+      await speakError(error);
     } finally {
       setIsAnalyzing(false);
     }
   }, [isAnalyzing, isConnected, config.context, setIsAnalyzing, addAnalysis]);
+
+  /** Graba un clip corto del stream de video de los lentes y lo analiza como secuencia. */
+  const recordAndAnalyzeClip = useCallback(async (durationMs: number = CLIP_DURATION_MS) => {
+    if (isAnalyzing || !isConnected) return;
+    setIsAnalyzing(true);
+    const frames: CameraFrame[] = [];
+    let stop: (() => void) | null = null;
+    try {
+      await glassesRepo.speakText('Grabando clip.').catch(() => {});
+      stop = await glassesRepo.startVideoStream((frame) => {
+        if (frame.base64) frames.push(frame);
+      });
+      await new Promise<void>((r) => setTimeout(() => r(), durationMs));
+      stop();
+      stop = null;
+      await glassesRepo.stopVideoStream().catch(() => {});
+      if (frames.length === 0) {
+        await glassesRepo.speakText('No llegaron fotogramas del video. Intenta de nuevo.').catch(() => {});
+        return;
+      }
+      setLastFrame(frames[frames.length - 1]);
+      const { analysis } = await analyzeUseCase.executeClip({
+        frames,
+        context: config.context,
+        speakResult: true,
+      });
+      addAnalysis(analysis);
+    } catch (error) {
+      await speakError(error);
+    } finally {
+      if (stop) {
+        stop();
+        await glassesRepo.stopVideoStream().catch(() => {});
+      }
+      setIsAnalyzing(false);
+    }
+  }, [isAnalyzing, isConnected, config.context, setIsAnalyzing, addAnalysis, setLastFrame]);
 
   const startAutoCapture = useCallback(() => {
     stopAutoCapture();
@@ -120,6 +166,7 @@ export function useFieldVision() {
     disconnect,
     captureAndAnalyze,
     analyzeFrame,
+    recordAndAnalyzeClip,
     startAutoCapture,
     stopAutoCapture,
     speak,

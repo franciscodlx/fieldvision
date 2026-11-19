@@ -46,6 +46,7 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
   const {
     connectionStatus, isConnected, isAnalyzing,
     currentAnalysis, analyses, connect, disconnect, captureAndAnalyze,
+    recordAndAnalyzeClip,
   } = useFieldVision();
   const { config, setConfig, lastFrame } = useAppStore();
 
@@ -122,6 +123,19 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
             </TouchableOpacity>
           </View>
         )}
+        {isConnected && (
+          <TouchableOpacity
+            onPress={() => { recordAndAnalyzeClip(); }}
+            style={[styles.btn, styles.btnBlue, styles.clipBtn]}
+            disabled={isAnalyzing}
+            accessibilityRole="button"
+            accessibilityLabel="Grabar un clip de video de 5 segundos y analizarlo"
+          >
+            <Text style={styles.btnText}>
+              {isAnalyzing ? 'Analizando…' : 'Analizar video (5 s)'}
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {/* Última foto capturada por los lentes */}
         {lastFrame && (
@@ -142,7 +156,7 @@ export function DashboardScreen({ navigation }: Props): React.JSX.Element {
           <View style={styles.demoBanner}>
             <Text style={styles.demoBannerText}>
               IA en modo demo: el diagnóstico es un texto de ejemplo, no analiza la foto.
-              Pon un CLAUDE_API_KEY real en .env para activar el análisis.
+              Pon un MUSE_API_KEY real (LLM_…) en .env para activar el análisis con Muse Spark.
             </Text>
           </View>
         )}
@@ -208,6 +222,7 @@ const styles = StyleSheet.create({
   },
   flex: { flex: 1 },
   btnSpacer: { marginLeft: 8 },
+  clipBtn: { marginTop: 8 },
   container: { flex: 1, backgroundColor: '#f9fafb' },
   scroll: { padding: 16 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },

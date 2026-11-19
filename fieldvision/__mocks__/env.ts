@@ -1,6 +1,8 @@
+export const MUSE_API_KEY = 'LLM_PLACEHOLDER-test';
+export const MUSE_VISION_MODEL = 'muse-spark-1.3';
 export const CLAUDE_API_KEY = 'sk-ant-PLACEHOLDER-test';
 export const OPENAI_API_KEY = 'sk-openai-PLACEHOLDER-test';
-export const VISION_PROVIDER = 'claude';
+export const VISION_PROVIDER = 'muse';
 export const TTS_PROVIDER = 'system';
 export const META_APP_TOKEN = 'meta-PLACEHOLDER-test';
 export const SUPABASE_URL = 'https://placeholder.supabase.co';

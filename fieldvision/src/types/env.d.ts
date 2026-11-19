@@ -1,4 +1,6 @@
 declare module '@env' {
+  export const MUSE_API_KEY: string;
+  export const MUSE_VISION_MODEL: string;
   export const CLAUDE_API_KEY: string;
   export const OPENAI_API_KEY: string;
   export const VISION_PROVIDER: string;

@@ -1,12 +1,19 @@
 import axios from 'axios';
 import type { CameraFrame, FieldContext, VisionAnalysis, AnalysisSeverity } from '@shared/types';
 import { AppConfig, SYSTEM_PROMPTS } from '@shared/config';
+import { analyzeWithMuse } from './MuseVisionClient';
+
+function activeKey(): string | undefined {
+  switch (AppConfig.VISION_PROVIDER) {
+    case 'openai': return AppConfig.OPENAI_API_KEY;
+    case 'claude': return AppConfig.CLAUDE_API_KEY;
+    default: return AppConfig.MUSE_API_KEY;
+  }
+}
 
 // La IA de visión está configurada solo si hay una key real (no placeholder).
 export function isVisionConfigured(): boolean {
-  const key = AppConfig.VISION_PROVIDER === 'openai'
-    ? AppConfig.OPENAI_API_KEY
-    : AppConfig.CLAUDE_API_KEY;
+  const key = activeKey();
   return !!key && key.length > 0 && !key.includes('PLACEHOLDER');
 }
 
@@ -53,8 +60,11 @@ export class VisionAIService {
     }
 
     const provider = AppConfig.VISION_PROVIDER;
-    let responseText: string;
+    if (provider === 'muse') {
+      return this.analyzeWithMuse([frame], context);
+    }
 
+    let responseText: string;
     if (provider === 'openai') {
       responseText = await this.callOpenAI(frame, context);
     } else {
@@ -62,6 +72,39 @@ export class VisionAIService {
     }
 
     return this.parseAnalysisResponse(responseText, frame);
+  }
+
+  /**
+   * Analiza un clip de video (secuencia de frames del stream de los lentes) en UNA llamada.
+   * Solo Muse: se muestrean hasta MAX_CLIP_FRAMES. Con otro proveedor se analiza el último frame.
+   */
+  async analyzeClip(frames: CameraFrame[], context: FieldContext): Promise<VisionAnalysis> {
+    const last = frames[frames.length - 1];
+    if (!last) throw new Error('El clip no tiene fotogramas.');
+    if (!isVisionConfigured() || AppConfig.VISION_PROVIDER !== 'muse') {
+      return this.analyzeFrame(last, context);
+    }
+    return this.analyzeWithMuse(frames, context);
+  }
+
+  private async analyzeWithMuse(frames: CameraFrame[], context: FieldContext): Promise<VisionAnalysis> {
+    const result = await analyzeWithMuse(frames, context);
+    const last = frames[frames.length - 1];
+    const label = result.severity === 'critical' ? 'CRÍTICO' : result.severity === 'warning' ? 'ATENCIÓN' : 'OK';
+    const extra = result.observations.length > 0
+      ? `\n\nOBSERVACIONES:\n${result.observations.map((o) => `• ${o}`).join('\n')}`
+      : '';
+    const source = frames.length > 1 ? `clip de ${frames.length} fotogramas` : 'foto';
+    return {
+      id: `analysis_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
+      summary: result.diagnosis,
+      details: `SEVERIDAD: ${label}\nDIAGNÓSTICO: ${result.diagnosis}\nACCIÓN: ${result.action}${extra}\n\n(${AppConfig.MUSE_VISION_MODEL} · ${source})`,
+      severity: result.severity,
+      actionItems: result.action ? [result.action] : [],
+      confidence: result.confidence,
+      analyzedAt: new Date(),
+      frameRef: `frame_${last.timestamp}`,
+    };
   }
 
   private async simulateAnalysis(frame: CameraFrame, context: FieldContext): Promise<VisionAnalysis> {

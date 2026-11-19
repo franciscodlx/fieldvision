@@ -1,4 +1,5 @@
 import {
+  MUSE_API_KEY, MUSE_VISION_MODEL,
   CLAUDE_API_KEY, OPENAI_API_KEY, VISION_PROVIDER, TTS_PROVIDER,
   META_APP_TOKEN, SUPABASE_URL, SUPABASE_ANON_KEY,
   STRIPE_PUBLISHABLE_KEY, STRIPE_PRICE_STARTER, STRIPE_PRICE_PRO,
@@ -6,10 +7,15 @@ import {
 } from '@env';
 import type { FieldContext, BillingPlan } from '../types';
 
+export type VisionProvider = 'muse' | 'claude' | 'openai';
+
 export const AppConfig = {
+  // Meta Model API (Muse Spark). Ver docs/11-muse-vision.md
+  MUSE_API_KEY,
+  MUSE_VISION_MODEL:       MUSE_VISION_MODEL || 'muse-spark-1.3',
   CLAUDE_API_KEY,
   OPENAI_API_KEY,
-  VISION_PROVIDER:         (VISION_PROVIDER ?? 'claude') as 'claude' | 'openai',
+  VISION_PROVIDER:         (VISION_PROVIDER || 'muse') as VisionProvider,
   TTS_PROVIDER:            (TTS_PROVIDER ?? 'system') as 'system' | 'openai',
   META_APP_TOKEN,
   SUPABASE_URL,

@@ -10,7 +10,7 @@ jest.mock('@shared/config', () => {
   const actual = jest.requireActual('@shared/config');
   return {
     ...actual,
-    AppConfig: { ...actual.AppConfig, CLAUDE_API_KEY: 'sk-ant-test-key-real' },
+    AppConfig: { ...actual.AppConfig, VISION_PROVIDER: 'claude', CLAUDE_API_KEY: 'sk-ant-test-key-real' },
   };
 });
 
@@ -24,7 +24,7 @@ const mockFrame: CameraFrame = {
   timestamp: Date.now(),
 };
 
-describe('VisionAIService', () => {
+describe('VisionAIService (proveedor Claude, formato de texto)', () => {
   let service: VisionAIService;
 
   beforeEach(() => {
